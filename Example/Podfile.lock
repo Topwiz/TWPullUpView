@@ -1,0 +1,16 @@
+PODS:
+  - TWPullUpView (0.1.0)
+
+DEPENDENCIES:
+  - TWPullUpView (from `../`)
+
+EXTERNAL SOURCES:
+  TWPullUpView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  TWPullUpView: 02867713985f9d4f433c107951bf03b7a00b1a02
+
+PODFILE CHECKSUM: b5baf1394d69ba0d527f0e124e16b7b9c2418406
+
+COCOAPODS: 1.10.1

@@ -1,0 +1,6 @@
+framework module TWPullUpView {
+  umbrella header "TWPullUpView-umbrella.h"
+
+  export *
+  module * { export * }
+}

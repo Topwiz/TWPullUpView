@@ -1,0 +1,22 @@
+{
+  "name": "TWPullUpView",
+  "version": "0.1.0",
+  "summary": "A short description of TWPullUpView.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Jeehoon Son/TWPullUpView",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Jeehoon Son": "tigerjs94@naver.com"
+  },
+  "source": {
+    "git": "https://github.com/Jeehoon Son/TWPullUpView.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "TWPullUpView/Classes/**/*"
+}
