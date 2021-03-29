@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
-  s.homepage         = 'https://github.com/Jeehoon Son/TWPullUpView'
+  s.homepage         = 'https://github.com/Topwiz/TWPullUpView'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Topwiz' => 'tigerjs94@naver.com' }
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
   s.ios.deployment_target = '10.0'
 
-  s.source_files = 'TWPullUpView/Soruces/**/*'
+  s.source_files = 'TWPullUpView/Sources/**/*'
   
   # s.resource_bundles = {
   #   'TWPullUpView' => ['TWPullUpView/Assets/*.png']
