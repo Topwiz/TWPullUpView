@@ -10,8 +10,7 @@ Create pull up view with multiple sticky points with scrollView supported.
 <img src="https://github.com/Topwiz/TWPullUpView/blob/master/Readme/TWPullupView_example.gif?raw=true" height="500"/>
 
 ## Features
-- Multiple *sticky* points
-- Landscape support
+- Multiple sticky points
 - Only Support's Portrait
 - Support's scrollView scroll connection (like AirBnb)
 
