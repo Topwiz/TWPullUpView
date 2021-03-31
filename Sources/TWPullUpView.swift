@@ -54,8 +54,25 @@ open class TWPullUpView: UIView {
     public var willMoveToPoint: ((CGFloat) -> ())?
     public var didMoveToPoint: ((CGFloat) -> ())?
     public var didChangePoint: ((CGFloat) -> ())?
+    public var percentOfMinToMax: ((CGFloat) -> ())?
+    public var nearestStickyPointIndex: Int {
+        return closestStickyIndex()
+    }
     
-    private var currentPoint: CGFloat = 0
+    /// Default is min value of sticky point
+    open var startPercentFromPoint: TWStickyPoint {
+        return  _stickyPoints.last!
+    }
+    
+    private var currentPoint: CGFloat = 0 {
+        didSet {
+            let min = startPercentFromPoint.toHeight
+            let max = _stickyPoints.last!.toHeight
+            let percent = (currentPoint - min) / (max - min)
+            percentOfMinToMax?(percent >= 0 ? percent : 0)
+        }
+    }
+    
     public var getCurrentPoint: CGFloat {
         get { return currentPoint }
     }

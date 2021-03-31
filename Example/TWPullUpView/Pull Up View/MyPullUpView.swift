@@ -43,6 +43,10 @@ class MyPullUpView: TWPullUpView {
         }
         setUI()
     }
+
+    override var startPercentFromPoint: TWStickyPoint {
+        return .percent(0.6)
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -62,7 +66,10 @@ class MyPullUpView: TWPullUpView {
         handlerView.layer.cornerRadius = 3
         
         addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: handlerView.bottomAnchor, constant: 10).isActive = true
+        let top = tableView.topAnchor.constraint(equalTo: handlerView.bottomAnchor, constant: 10)
+        top.isActive = true
+        top.priority = .defaultLow
+        
         tableView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
