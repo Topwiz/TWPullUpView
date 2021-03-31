@@ -9,15 +9,6 @@ import Foundation
 import TWPullUpView
 import UIKit
 
-struct TWCustomOptions: TWOptionProtocol {
-    var animationDuration: Double = 0.3
-    var animationDamping: CGFloat = 1
-    var animationSpringVelocity: CGFloat = 0.4
-    var overMaxHeight: Bool = true
-    var underMinHeight: Bool = true
-}
-
-
 class MyPullUpView: TWPullUpView {
     
     private let handlerView: UIView = {
@@ -27,7 +18,6 @@ class MyPullUpView: TWPullUpView {
         return view
     }()
     
-    private let customOptions: TWOptionProtocol = TWCustomOptions()
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -39,7 +29,11 @@ class MyPullUpView: TWPullUpView {
     }()
     
     private var dummyModel = [DummyModel]()
-        
+
+    override var option: TWPullUpOption {
+        return TWPullUpOption()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
@@ -48,7 +42,6 @@ class MyPullUpView: TWPullUpView {
             dummyModel.append(model)
         }
         setUI()
-        setOptions()
     }
     
     required init?(coder: NSCoder) {
@@ -74,12 +67,7 @@ class MyPullUpView: TWPullUpView {
         tableView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-    }
-    
-    private func setOptions() {
-        stickyPoints = [.percent(0.3), .percent(0.6), .max]
-        setOption(customOptions)
-        addScrollView(tableView)
+        attachScrollView(tableView)
     }
     
 }

@@ -14,6 +14,9 @@ class ViewController: UIViewController {
 
     lazy var pullUpView: MyPullUpView = {
         let view = MyPullUpView()
+        view.stickyPoints = [.percent(0.3), .percent(0.8)]
+        view.isPullUpScrollEnabled = true
+        
         view.willMoveToPoint = { point in
             
         }

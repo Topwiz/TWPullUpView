@@ -9,12 +9,15 @@ import Foundation
 import UIKit
 
 public enum TWStickyPoint {
+    case min
     case percent(CGFloat)
     case custom(CGFloat)
     case max
     
     var toHeight: CGFloat {
         switch self {
+        case .min:
+            return 0
         case .percent(let percent):
             return UIScreen.main.bounds.height * percent
         case .custom(let height):
@@ -27,18 +30,26 @@ public enum TWStickyPoint {
 
 open class TWPullUpView: UIView {
     
-    //Options
-    private var option: TWOptionProtocol = TWPullUpOption()
+    /// Options
+    open var option: TWPullUpOption {
+        return TWPullUpOption()
+    }
+    
     private var initialStickyPoint: TWStickyPoint = .percent(0.3)
     
-    open var stickyPoints: [TWStickyPoint] = [.percent(0.3), .percent(0.6), .max] {
-        didSet {
-            stickyPoints = stickyPoints.sorted(by: {  $0.toHeight < $1.toHeight })
-            if stickyPoints.count <= 1 {
+    private var _stickyPoints: [TWStickyPoint] = [.percent(0.3), .percent(0.6), .max]
+    open var stickyPoints: [TWStickyPoint] {
+        get {
+            return _stickyPoints
+        } set {
+            self._stickyPoints = newValue.sorted(by: {  $0.toHeight < $1.toHeight })
+            if _stickyPoints.count <= 1 {
                 fatalError("You need to add more than 2 sticky points.")
             }
         }
     }
+    
+    public var isPullUpScrollEnabled: Bool = true
     
     public var willMoveToPoint: ((CGFloat) -> ())?
     public var didMoveToPoint: ((CGFloat) -> ())?
@@ -68,7 +79,6 @@ open class TWPullUpView: UIView {
     private var scrollViewBounceCorrection: CGFloat?
     private var slowDownPoint: CGFloat?
     
-    
     /// Add pull up view to parent view
     /// - Parameters:
     ///   - view: Parent view
@@ -81,6 +91,18 @@ open class TWPullUpView: UIView {
                       completion: (()->())? = nil) {
         
         setup(superview: view, initialStickyPoint: initialStickyPoint, animate: animated)
+    }
+    
+    
+    /// Remove from super view
+    /// - Parameters:
+    ///   - animate: Animate to bottom and remove
+    ///   - completion: Completion after remove from super view
+    public func removeView(animate: Bool, completion: (()->())? = nil) {
+        animateView(to: .min, animate: animate) {
+            self.removeFromSuperview()
+            completion?()
+        }
     }
 }
 
@@ -105,7 +127,7 @@ extension TWPullUpView {
     
     /// Add scrollView for scroll connection
     /// - Parameter scrollView: Internal Scroll View
-    public func addScrollView(_ scrollView: UIScrollView) {
+    public func attachScrollView(_ scrollView: UIScrollView) {
         self.scrollView = scrollView
     }
     
@@ -143,7 +165,10 @@ extension TWPullUpView {
 extension TWPullUpView {
     @objc private func panning(_ gesture: UIPanGestureRecognizer) {
         guard let parentView = superview else { return }
+        if !isPullUpScrollEnabled { return }
+        
         let translationY = gesture.translation(in: self).y
+        let velocityY = gesture.velocity(in: self).y
         
         if scrollView?.contentOffset.y ?? 0 > scrollViewDefaultOffsetY {
             offsetCorrection = translationY
@@ -158,7 +183,7 @@ extension TWPullUpView {
             if let point = panningStartPoint, (scrollView?.contentOffset.y ?? 0 <= scrollViewDefaultOffsetY) {
                 var p = point - (offsetCorrection != nil ? (translationY - offsetCorrection!) : translationY)
                 
-                if (translationY < 0 && option.overMaxHeight ? true : p <= stickyPoints.last!.toHeight) &&
+                if (translationY < 0 && option.overMaxHeight ? (scrollView == nil ? true : p <= stickyPoints.last!.toHeight) : p <= stickyPoints.last!.toHeight) &&
                     (translationY > 0 && option.underMinHeight ? true : p >= stickyPoints.first!.toHeight) {
                     
                     if option.overMaxHeight && currentPoint >= stickyPoints.last!.toHeight {
@@ -188,7 +213,7 @@ extension TWPullUpView {
             scrollViewBounceCorrection = nil
             offsetCorrection = nil
             panningStartPoint = nil
-            moveToStickyPoint(index: closestStickyIndex())
+            moveToStickyPoint(index: closestStickyIndex(velocity: velocityY))
         default: break
         }
         
@@ -214,13 +239,14 @@ extension TWPullUpView {
     /// - Parameters:
     ///   - point: Custom point
     ///   - animate: Animate to that point
-    public func animateView(to point: TWStickyPoint, animate: Bool = true) {
+    public func animateView(to point: TWStickyPoint, animate: Bool = true, completion: (()->())? = nil) {
         guard let parentView = superview else { return }
         topConstraint?.constant = parentView.frame.height - point.toHeight
         currentPoint = point.toHeight
         willMoveToPoint?(currentPoint)
-
-        UIView.animate(withDuration: animate ? option.animationDuration : 0,
+        
+        let duration = animate ? option.animationDuration : 0
+        UIView.animate(withDuration: duration,
                        delay: 0,
                        usingSpringWithDamping: option.animationDamping,
                        initialSpringVelocity: option.animationSpringVelocity,
@@ -228,8 +254,11 @@ extension TWPullUpView {
             parentView.layoutIfNeeded()
         } completion: { _ in
             self.didMoveToPoint?(point.toHeight)
+            self.checkScrollViewEnabled()
+            completion?()
         }
-
+        
+        checkScrollViewEnabled()
     }
     
     
@@ -242,19 +271,16 @@ extension TWPullUpView {
         animateView(to: stickyPoints[index])
     }
     
-    private func closestStickyIndex(from point: TWStickyPoint? = nil) -> Int {
+    private func closestStickyIndex(from point: TWStickyPoint? = nil, velocity: CGFloat? = nil) -> Int {
         let point = point == nil ? currentPoint : point!.toHeight
-        return stickyPoints.map { $0.toHeight }.enumerated().min( by: { abs($0.1 - point) < abs($1.1 - point) } )!.offset
-    }
-}
-
-//MARK: Options
-extension TWPullUpView {
-    
-    
-    /// Custom option for TWPullUpView - Use TWOptionProtocol
-    /// - Parameter option: Custom option
-    public func setOption(_ option: TWOptionProtocol) {
-        self.option = option
+        var offset = stickyPoints.map { $0.toHeight }.enumerated().min( by: { abs($0.1 - point) < abs($1.1 - point) } )!.offset
+        if let velocity = velocity {
+            if velocity < -option.moveToNextPointVelocity && offset < stickyPoints.count - 1 { // scrolling up
+                offset += 1
+            } else if velocity > option.moveToNextPointVelocity && offset > 0 {
+                offset -= 1
+            }
+        }
+        return offset
     }
 }

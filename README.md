@@ -27,15 +27,21 @@ pod 'TWPullUpView'
 
 ## Usage example
 ```swift
+import TWPullUpView
+
 override func viewDidLoad() {
     super.viewDidLoad()
     let pullUpView = MyPullUpView()
+    pullUpView.stickyPoints = [.percent(0.3), .percent(0.6), .max]
     pullUpView.addOn(view, initialStickyPoint: .percent(0.3), animated: true)
+    
+    // Remove View
+    pullUpView.removeView(animate: true)
 }
 
 
 class MyPullUpView: TWPullUpView {
-
+    init() { }
 }
 
 ```
@@ -48,12 +54,12 @@ view.willMoveToPoint = { point in
 }
 
 // It get called after the view moved to the nearest sticky point
-didMoveToPoint = { point in
+view.didMoveToPoint = { point in
 
 }
 
 // It get called when the user is panning the view
-didChangePoint = { point in
+view.didChangePoint = { point in
 
 }
 ```
@@ -62,30 +68,40 @@ didChangePoint = { point in
 ```swift
 class MyPullUpView: TWPullUpView {
 
-  private func setOptions() {
-      addScrollView(tableView)
-  }
+    private func setView() {
+        attachScrollView(tableView)
+    }
 }
 ```
 
 ## Set Custom Options
 ```swift
 
-struct TWCustomOptions: TWOptionProtocol {
-    var animationDuration: Double = 0.3
-    var animationDamping: CGFloat = 1
-    var animationSpringVelocity: CGFloat = 0.4
-    var overMaxHeight: Bool = true
-    var underMinHeight: Bool = true
+public struct TWPullUpOption {
+    /// Animation option to nearest sticky point when panning is ended
+    public var animationDuration: Double = 0.3
+    public var animationDamping: CGFloat = 1
+    public var animationSpringVelocity: CGFloat = 0.4
+
+    /// If view can pull up then max height. (When there is no scrollview inside)
+    public var overMaxHeight: Bool = true
+
+    /// If view can pull down then min Height
+    public var underMinHeight: Bool = true
+
+    /// Velocity of the panning to go to next sticky point
+    /// If it is 0 it will move to next point right away.
+    /// If it is CGFloat.infinity view will need to move more than half up or down to move to the next sticky point
+    /// Recommend to use between 1000 ~ 3000
+    public var moveToNextPointVelocity: CGFloat = 1500
 }
 
-private let customOptions: TWOptionProtocol = TWCustomOptions()
+class MyPullUpView: TWPullUpView {
 
-private func setOptions() {
-      stickyPoints = [.percent(0.3), .percent(0.6), .max]
-      setOption(customOptions)
-      addScrollView(tableView)
- }
+    override var option: TWPullUpOption {
+        return TWPullUpOption()
+    }
+}
 
 ```
 

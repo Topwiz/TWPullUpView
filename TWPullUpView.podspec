@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'TWPullUpView'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.description      = 'Pull up view with multiple sticky points and scrollView scroll connection supported.'
   s.summary          = 'Pull up view with multiple sticky points.'
 # This description is used to generate tags and improve search results.

@@ -10,7 +10,6 @@
 		3ED0BFCA94C71180D6A575F834D5B31C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		5314EC3AB4DE1C3EB256F88B37C463AE /* Pods-TWPullUpView_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB0286EEFFBD8CA4179191B8306F423 /* Pods-TWPullUpView_Tests-dummy.m */; };
 		572B8670261214000087A22D /* TWPullUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B866D261214000087A22D /* TWPullUpView.swift */; };
-		572B8671261214000087A22D /* TWOptionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B866E261214000087A22D /* TWOptionProtocol.swift */; };
 		572B8672261214000087A22D /* TWPullUpOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B866F261214000087A22D /* TWPullUpOption.swift */; };
 		59D68506811F0B8CAE1A6D71444B661B /* TWPullUpView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F349548C1A7AB46FFA7D6B3D05A2901A /* TWPullUpView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5B5FA09762B902A277C99A1C3014389A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
@@ -54,7 +53,6 @@
 		4BB0286EEFFBD8CA4179191B8306F423 /* Pods-TWPullUpView_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TWPullUpView_Tests-dummy.m"; sourceTree = "<group>"; };
 		4DAF547AB29199F4EB6D6FE12912ED4F /* TWPullUpView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TWPullUpView-dummy.m"; sourceTree = "<group>"; };
 		572B866D261214000087A22D /* TWPullUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TWPullUpView.swift; sourceTree = "<group>"; };
-		572B866E261214000087A22D /* TWOptionProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TWOptionProtocol.swift; sourceTree = "<group>"; };
 		572B866F261214000087A22D /* TWPullUpOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TWPullUpOption.swift; sourceTree = "<group>"; };
 		6A621E00E5E5F62D464127C9E9CA9322 /* TWPullUpView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TWPullUpView.release.xcconfig; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -126,7 +124,6 @@
 		572B866C261213F00087A22D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				572B866E261214000087A22D /* TWOptionProtocol.swift */,
 				572B866F261214000087A22D /* TWPullUpOption.swift */,
 				572B866D261214000087A22D /* TWPullUpView.swift */,
 			);
@@ -388,7 +385,6 @@
 			files = (
 				77D4CE7D4B932BFFB5D41617D9865766 /* TWPullUpView-dummy.m in Sources */,
 				572B8672261214000087A22D /* TWPullUpOption.swift in Sources */,
-				572B8671261214000087A22D /* TWOptionProtocol.swift in Sources */,
 				572B8670261214000087A22D /* TWPullUpView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -544,6 +540,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.1.1;
 				MODULEMAP_FILE = "Target Support Files/TWPullUpView/TWPullUpView.modulemap";
 				PRODUCT_MODULE_NAME = TWPullUpView;
 				PRODUCT_NAME = TWPullUpView;
@@ -735,6 +732,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.1.1;
 				MODULEMAP_FILE = "Target Support Files/TWPullUpView/TWPullUpView.modulemap";
 				PRODUCT_MODULE_NAME = TWPullUpView;
 				PRODUCT_NAME = TWPullUpView;
