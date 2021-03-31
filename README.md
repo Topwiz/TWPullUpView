@@ -62,6 +62,12 @@ view.didMoveToPoint = { point in
 view.didChangePoint = { point in
 
 }
+
+// It get called when the user is panning and return's percentage of how much the view is opened.
+// You can change the starting point of the percent by overriding 'startPercentFromPoint' the default is the min point in sticky array.
+view.percentOfMinToMax = { percent in 
+
+}
 ```
 
 ## Usage for internal scrollView
