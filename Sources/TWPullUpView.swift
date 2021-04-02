@@ -14,7 +14,7 @@ public enum TWStickyPoint {
     case custom(CGFloat)
     case max
     
-    var toHeight: CGFloat {
+    public var toHeight: CGFloat {
         switch self {
         case .min:
             return 0
@@ -57,6 +57,14 @@ open class TWPullUpView: UIView {
     public var percentOfMinToMax: ((CGFloat) -> ())?
     public var nearestStickyPointIndex: Int {
         return closestStickyIndex()
+    }
+    
+    public var getMaxHeight: CGFloat {
+        get { return _stickyPoints.last!.toHeight }
+    }
+    
+    public var getMinHeight: CGFloat {
+        get { return _stickyPoints.first!.toHeight }
     }
     
     /// Default is min value of sticky point
@@ -116,8 +124,8 @@ open class TWPullUpView: UIView {
     ///   - animate: Animate to bottom and remove
     ///   - completion: Completion after remove from super view
     public func removeView(animate: Bool, completion: (()->())? = nil) {
-        animateView(to: .min, animate: animate) {
-            self.removeFromSuperview()
+        animateView(to: .min, animate: animate) { [weak self] in
+            self?.removeFromSuperview()
             completion?()
         }
     }
@@ -195,6 +203,7 @@ extension TWPullUpView {
         
         switch gesture.state {
         case .began:
+            offsetCorrection = nil
             panningStartPoint = currentPoint
         case .changed:
             if let point = panningStartPoint, (scrollView?.contentOffset.y ?? 0 <= scrollViewDefaultOffsetY) {
@@ -242,7 +251,7 @@ extension TWPullUpView {
         if (stickyPoints.last!.toHeight - 2)...(stickyPoints.last!.toHeight + 2) ~= currentPoint  {
             scrollView.isScrollEnabled = true
         } else {
-            scrollView.contentOffset.y = 0
+            scrollView.contentOffset.y = scrollViewDefaultOffsetY
             scrollView.isScrollEnabled = false
         }
         
@@ -269,9 +278,9 @@ extension TWPullUpView {
                        initialSpringVelocity: option.animationSpringVelocity,
                        options: [.curveEaseInOut]) {
             parentView.layoutIfNeeded()
-        } completion: { _ in
-            self.didMoveToPoint?(point.toHeight)
-            self.checkScrollViewEnabled()
+        } completion: { [weak self] _ in
+            self?.didMoveToPoint?(point.toHeight)
+            self?.checkScrollViewEnabled()
             completion?()
         }
         
