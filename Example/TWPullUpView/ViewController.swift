@@ -12,24 +12,7 @@ class ViewController: UIViewController {
     
     let mapView = MKMapView()
 
-    lazy var pullUpView: MyPullUpView = {
-        let view = MyPullUpView()
-        view.stickyPoints = [.percent(0.3), .percent(0.8)]
-        view.isPullUpScrollEnabled = true
-        
-        view.willMoveToPoint = { point in
-            
-        }
-        
-        view.didMoveToPoint = { point in
-            
-        }
-        
-        view.didChangePoint = { point in
-            
-        }
-        return view
-    }()
+    var pullUpViewController: MyPullUpViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,13 +24,10 @@ class ViewController: UIViewController {
         mapView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    
-        pullUpView.addOn(view, initialStickyPoint: .percent(0.3), animated: true)
+        pullUpViewController = MyPullUpViewController()
+        pullUpViewController.stickyPoints = [.percent(0.3), .percent(0.8)]
+        pullUpViewController.isPullUpScrollEnabled = true
+        pullUpViewController.addOn(self, initialStickyPoint: .percent(0.3), animated: true)
 
     }
-
 }

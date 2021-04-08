@@ -10,7 +10,7 @@
 		0044D9998E6C2BF59DB1367C /* Pods_TWPullUpView_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A80BAE3F30E8DF436C7BDC30 /* Pods_TWPullUpView_Tests.framework */; };
 		27EF60383C6CAC18C1D8AD58 /* Pods_TWPullUpView_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EC6738EBBF0CF22B0B1D205 /* Pods_TWPullUpView_Example.framework */; };
 		572B8682261214630087A22D /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B867E261214630087A22D /* TableViewCell.swift */; };
-		572B8683261214630087A22D /* MyPullUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B867F261214630087A22D /* MyPullUpView.swift */; };
+		572B8683261214630087A22D /* MyPullUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B867F261214630087A22D /* MyPullUpViewController.swift */; };
 		572B8684261214630087A22D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B8680261214630087A22D /* ViewController.swift */; };
 		572B8685261214630087A22D /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572B8681261214630087A22D /* DummyData.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -37,7 +37,7 @@
 		3FBB9D38CE191A0553109F1D /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		4868533C9A0C6F4AFE7D9238 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		572B867E261214630087A22D /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		572B867F261214630087A22D /* MyPullUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPullUpView.swift; sourceTree = "<group>"; };
+		572B867F261214630087A22D /* MyPullUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPullUpViewController.swift; sourceTree = "<group>"; };
 		572B8680261214630087A22D /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		572B8681261214630087A22D /* DummyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* TWPullUpView_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TWPullUpView_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				572B867E261214630087A22D /* TableViewCell.swift */,
-				572B867F261214630087A22D /* MyPullUpView.swift */,
+				572B867F261214630087A22D /* MyPullUpViewController.swift */,
 			);
 			path = "Pull Up View";
 			sourceTree = "<group>";
@@ -354,7 +354,7 @@
 				572B8682261214630087A22D /* TableViewCell.swift in Sources */,
 				572B8684261214630087A22D /* ViewController.swift in Sources */,
 				572B8685261214630087A22D /* DummyData.swift in Sources */,
-				572B8683261214630087A22D /* MyPullUpView.swift in Sources */,
+				572B8683261214630087A22D /* MyPullUpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

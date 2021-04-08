@@ -31,17 +31,19 @@ import TWPullUpView
 
 override func viewDidLoad() {
     super.viewDidLoad()
-    let pullUpView = MyPullUpView()
+    
+    let pullUpView = MyPullUpViewController()
     pullUpView.stickyPoints = [.percent(0.3), .percent(0.6), .max]
-    pullUpView.addOn(view, initialStickyPoint: .percent(0.3), animated: true)
+    pullUpView.addOn(self, initialStickyPoint: .percent(0.3), animated: true)
+    pullUpView.isPullUpScrollEnabled = true
     
     // Remove View
     pullUpView.removeView(animate: true)
 }
 
 
-class MyPullUpView: TWPullUpView {
-    init() { }
+class MyPullUpViewController: TWPullUpViewController {
+    
 }
 
 ```
@@ -49,30 +51,30 @@ class MyPullUpView: TWPullUpView {
 ## Callback
 ```swift
 // It get called before the view move to nearest sticky point
-view.willMoveToPoint = { point in
+willMoveToPoint = { point in
 
 }
 
 // It get called after the view moved to the nearest sticky point
-view.didMoveToPoint = { point in
+didMoveToPoint = { point in
 
 }
 
 // It get called when the user is panning the view
-view.didChangePoint = { point in
+didChangePoint = { point in
 
 }
 
 // It get called when the user is panning and return's percentage of how much the view is opened.
 // You can change the starting point of the percent by overriding 'startPercentFromPoint' the default is the min point in sticky array.
-view.percentOfMinToMax = { percent in 
+percentOfMinToMax = { percent in 
 
 }
 ```
 
 ## Usage for internal scrollView
 ```swift
-class MyPullUpView: TWPullUpView {
+class MyPullUpViewController: TWPullUpViewController {
 
     private func setView() {
         attachScrollView(tableView)
@@ -102,7 +104,7 @@ public struct TWPullUpOption {
     public var moveToNextPointVelocity: CGFloat = 1500
 }
 
-class MyPullUpView: TWPullUpView {
+class MyPullUpViewController: TWPullUpViewController {
 
     override var option: TWPullUpOption {
         return TWPullUpOption()

@@ -28,8 +28,7 @@ public enum TWStickyPoint {
     }
 }
 
-open class TWPullUpView: UIView {
-    
+open class TWPullUpViewController: UIViewController {
     /// Options
     open var option: TWPullUpOption {
         return TWPullUpOption()
@@ -87,6 +86,8 @@ open class TWPullUpView: UIView {
     
     private weak var scrollView: UIScrollView?
     
+    private weak var parentVC: UIViewController!
+    
     // Constraint
     private var leftConstraint: NSLayoutConstraint?
     private var topConstraint: NSLayoutConstraint?
@@ -110,12 +111,12 @@ open class TWPullUpView: UIView {
     ///   - initialStickyPoint: Starting sticky point
     ///   - animated: Animate to start sticky point
     ///   - completion: Return's after finishing animation
-    public func addOn(_ view: UIView,
+    public func addOn(_ viewController: UIViewController,
                       initialStickyPoint: TWStickyPoint,
                       animated: Bool,
                       completion: (()->())? = nil) {
         
-        setup(superview: view, initialStickyPoint: initialStickyPoint, animate: animated)
+        setup(superview: viewController, initialStickyPoint: initialStickyPoint, animate: animated)
     }
     
     
@@ -125,25 +126,29 @@ open class TWPullUpView: UIView {
     ///   - completion: Completion after remove from super view
     public func removeView(animate: Bool, completion: (()->())? = nil) {
         animateView(to: .min, animate: animate) { [weak self] in
-            self?.removeFromSuperview()
+            self?.willMove(toParentViewController: nil)
+            self?.view.removeFromSuperview()
+            self?.removeFromParentViewController()
             completion?()
         }
     }
 }
 
-extension TWPullUpView: UIGestureRecognizerDelegate {
+extension TWPullUpViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }
 
 //MARK: - SetUp
-extension TWPullUpView {
+extension TWPullUpViewController {
     // MARK: - SetUp
-    private func setup(superview: UIView, initialStickyPoint: TWStickyPoint, animate: Bool) {
-        translatesAutoresizingMaskIntoConstraints = false
+    private func setup(superview: UIViewController, initialStickyPoint: TWStickyPoint, animate: Bool) {
+        parentVC = superview
+        view.translatesAutoresizingMaskIntoConstraints = false
         self.initialStickyPoint = initialStickyPoint
-        superview.addSubview(self)
+        superview.addChildViewController(self)
+        superview.view.addSubview(self.view)
         setConstraint()
         setupPanGesture()
         animateView(to: initialStickyPoint, animate: animate)
@@ -158,12 +163,11 @@ extension TWPullUpView {
     
     // MARK: - Set Constraint
     private func setConstraint() {
-        guard let parentView = superview else { return }
-        topConstraint = self.topAnchor.constraint(equalTo: parentView.topAnchor)
-        topConstraint?.constant = parentView.frame.height
-        leftConstraint = self.leftAnchor.constraint(equalTo: parentView.leftAnchor)
-        rightConstraint = self.rightAnchor.constraint(equalTo: parentView.rightAnchor)
-        bottomConstraint = self.bottomAnchor.constraint(equalTo: parentView.bottomAnchor)
+        topConstraint = view.topAnchor.constraint(equalTo: parentVC.view.topAnchor)
+        topConstraint?.constant = parentVC.view.frame.height
+        leftConstraint = view.leftAnchor.constraint(equalTo: parentVC.view.leftAnchor)
+        rightConstraint = view.rightAnchor.constraint(equalTo: parentVC.view.rightAnchor)
+        bottomConstraint = view.bottomAnchor.constraint(equalTo: parentVC.view.bottomAnchor)
         
         let constraintsToActivate = [topConstraint,
                                      leftConstraint,
@@ -171,7 +175,8 @@ extension TWPullUpView {
                                      bottomConstraint
                                      ].compactMap { $0 }
         NSLayoutConstraint.activate(constraintsToActivate)
-        parentView.layoutIfNeeded()
+        parentVC.didMove(toParentViewController: self)
+        parentVC.view.layoutIfNeeded()
     }
     
     // MARK: - Gesture
@@ -180,20 +185,19 @@ extension TWPullUpView {
         pan.delegate = self
         pan.minimumNumberOfTouches = 1
         pan.maximumNumberOfTouches = 1
-        addGestureRecognizer(pan)
+        view.addGestureRecognizer(pan)
     }
     
 }
 
 
 // MARK: - Gesture
-extension TWPullUpView {
+extension TWPullUpViewController {
     @objc private func panning(_ gesture: UIPanGestureRecognizer) {
-        guard let parentView = superview else { return }
         if !isPullUpScrollEnabled { return }
         
-        let translationY = gesture.translation(in: self).y
-        let velocityY = gesture.velocity(in: self).y
+        let translationY = gesture.translation(in: view).y
+        let velocityY = gesture.velocity(in: view).y
         
         if scrollView?.contentOffset.y ?? 0 > scrollViewDefaultOffsetY {
             offsetCorrection = translationY
@@ -219,12 +223,12 @@ extension TWPullUpView {
                     }
                     
                     scrollView?.contentOffset.y = scrollViewDefaultOffsetY
-                    topConstraint?.constant = parentView.frame.height - p
+                    topConstraint?.constant = parentVC.view.frame.height - p
                     currentPoint = p
                     didChangePoint?(p)
                     
                     UIView.animate(withDuration: 0.05) {
-                        parentView.layoutIfNeeded()
+                        self.parentVC.view.layoutIfNeeded()
                     }
                 } else {
                     offsetCorrection = nil
@@ -259,15 +263,14 @@ extension TWPullUpView {
 }
 
 //MARK: - Animation
-extension TWPullUpView {
+extension TWPullUpViewController {
     
     /// Animate pull up view to custom point
     /// - Parameters:
     ///   - point: Custom point
     ///   - animate: Animate to that point
     public func animateView(to point: TWStickyPoint, animate: Bool = true, completion: (()->())? = nil) {
-        guard let parentView = superview else { return }
-        topConstraint?.constant = parentView.frame.height - point.toHeight
+        topConstraint?.constant = parentVC.view.frame.height - point.toHeight
         currentPoint = point.toHeight
         willMoveToPoint?(currentPoint)
         
@@ -277,7 +280,7 @@ extension TWPullUpView {
                        usingSpringWithDamping: option.animationDamping,
                        initialSpringVelocity: option.animationSpringVelocity,
                        options: [.curveEaseInOut]) {
-            parentView.layoutIfNeeded()
+            self.parentVC.view.layoutIfNeeded()
         } completion: { [weak self] _ in
             self?.didMoveToPoint?(point.toHeight)
             self?.checkScrollViewEnabled()
