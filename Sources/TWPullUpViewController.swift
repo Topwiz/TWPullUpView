@@ -105,6 +105,13 @@ open class TWPullUpViewController: UIViewController {
     private var scrollViewBounceCorrection: CGFloat?
     private var slowDownPoint: CGFloat?
     
+    public var viewPanGestureName: String {
+        get { "TWPullUpViewPanGesture\(self.hashValue)" }
+    }
+    public var scrollViewPanGestureName: String {
+        get { "TWPullUpViewScrollViewGesture\(self.hashValue)" }
+    }
+    
     /// Add pull up view to parent view
     /// - Parameters:
     ///   - view: Parent view
@@ -136,7 +143,18 @@ open class TWPullUpViewController: UIViewController {
 
 extension TWPullUpViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        return pullUpGestureRecognizer(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer)
+    }
+}
+
+//MARK: Gesture
+extension TWPullUpViewController {
+    
+    /// When you have a ScrollView inside
+    /// you have to return 'TRUE' if gestureRecognizer and otherGestureRecognizer both contains accessibilityHint of 'viewPanGestureName' and 'scrollViewPanGestureName'
+    @objc open func pullUpGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        let names = [viewPanGestureName, scrollViewPanGestureName]
+        return names.contains(gestureRecognizer.accessibilityHint ?? "") && names.contains(otherGestureRecognizer.accessibilityHint ?? "")
     }
 }
 
@@ -159,6 +177,7 @@ extension TWPullUpViewController {
     /// - Parameter scrollView: Internal Scroll View
     public func attachScrollView(_ scrollView: UIScrollView) {
         self.scrollView = scrollView
+        self.scrollView?.panGestureRecognizer.accessibilityHint = scrollViewPanGestureName
     }
     
     // MARK: - Set Constraint
@@ -185,6 +204,7 @@ extension TWPullUpViewController {
         pan.delegate = self
         pan.minimumNumberOfTouches = 1
         pan.maximumNumberOfTouches = 1
+        pan.accessibilityHint = viewPanGestureName
         view.addGestureRecognizer(pan)
     }
     
