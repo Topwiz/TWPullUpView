@@ -126,9 +126,9 @@ open class TWPullUpViewController: UIViewController {
     ///   - completion: Completion after remove from super view
     public func removeView(animate: Bool, completion: (()->())? = nil) {
         animateView(to: .min, animate: animate) { [weak self] in
-            self?.willMove(toParentViewController: nil)
+            self?.willMove(toParent: nil)
             self?.view.removeFromSuperview()
-            self?.removeFromParentViewController()
+            self?.removeFromParent()
             completion?()
         }
     }
@@ -147,7 +147,7 @@ extension TWPullUpViewController {
         parentVC = superview
         view.translatesAutoresizingMaskIntoConstraints = false
         self.initialStickyPoint = initialStickyPoint
-        superview.addChildViewController(self)
+        superview.addChild(self)
         superview.view.addSubview(self.view)
         setConstraint()
         setupPanGesture()
@@ -175,7 +175,7 @@ extension TWPullUpViewController {
                                      bottomConstraint
                                      ].compactMap { $0 }
         NSLayoutConstraint.activate(constraintsToActivate)
-        parentVC.didMove(toParentViewController: self)
+        parentVC.didMove(toParent: self)
         parentVC.view.layoutIfNeeded()
     }
     
